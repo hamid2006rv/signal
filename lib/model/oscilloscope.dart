@@ -27,12 +27,14 @@ import 'package:flutter/material.dart';
 ///
 /// NB: This is not a Time Domain trace, the update frequency of the supplied [dataSet] determines the trace speed.
 class Oscilloscope extends StatefulWidget {
-  final List<num> dataSet;
+  final List<num> dataSet1;
+  final List<num> dataSet2;
   final double yAxisMin;
   final double yAxisMax;
   final double padding;
   final Color backgroundColor;
-  final Color traceColor;
+  final Color traceColor1;
+  final Color traceColor2;
   final Color yAxisColor;
   final bool showYAxis;
   final double strokeWidth;
@@ -42,7 +44,8 @@ class Oscilloscope extends StatefulWidget {
   final bool drawMinLine;
 
   Oscilloscope(
-      {this.traceColor = Colors.white,
+      {this.traceColor1 = Colors.white,
+      this.traceColor2 = Colors.white,
       this.backgroundColor = Colors.black,
       this.yAxisColor = Colors.white,
       @Deprecated("Use 'margin' instead") this.padding = 10.0,
@@ -54,7 +57,8 @@ class Oscilloscope extends StatefulWidget {
       this.onNewViewport,
       this.drawMaxLine = false,
       this.drawMinLine = false,
-      required this.dataSet});
+      required this.dataSet1,
+      required this.dataSet2});
 
   @override
   _OscilloscopeState createState() => _OscilloscopeState();
@@ -63,24 +67,46 @@ class Oscilloscope extends StatefulWidget {
 class _OscilloscopeState extends State<Oscilloscope> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: widget.margin,
-      width: double.infinity,
-      height: double.infinity,
-      color: widget.backgroundColor,
-      child: ClipRect(
-        child: CustomPaint(
-            painter: _TracePainter(
-          showYAxis: widget.showYAxis,
-          yAxisColor: widget.yAxisColor,
-          dataSet: widget.dataSet,
-          traceColor: widget.traceColor,
-          yMin: widget.yAxisMin,
-          yMax: widget.yAxisMax,
-          strokeWidth: widget.strokeWidth,
-          onNewViewport: widget.onNewViewport,
-        )),
-      ),
+    return Stack(
+      children: [
+        Container(
+          padding: widget.margin,
+          width: double.infinity,
+          height: double.infinity,
+          color: widget.backgroundColor,
+          child: ClipRect(
+            child: CustomPaint(
+                painter: _TracePainter(
+              showYAxis: widget.showYAxis,
+              yAxisColor: widget.yAxisColor,
+              dataSet: widget.dataSet1,
+              traceColor: widget.traceColor1,
+              yMin: widget.yAxisMin,
+              yMax: widget.yAxisMax,
+              strokeWidth: widget.strokeWidth,
+              onNewViewport: widget.onNewViewport,
+            )),
+          ),
+        ),
+        Container(
+          padding: widget.margin,
+          width: double.infinity,
+          height: double.infinity,
+          child: ClipRect(
+            child: CustomPaint(
+                painter: _TracePainter(
+                  showYAxis: widget.showYAxis,
+                  yAxisColor: widget.yAxisColor,
+                  dataSet: widget.dataSet2,
+                  traceColor: widget.traceColor2,
+                  yMin: widget.yAxisMin,
+                  yMax: widget.yAxisMax,
+                  strokeWidth: widget.strokeWidth,
+                  onNewViewport: widget.onNewViewport,
+                )),
+          ),
+        ),
+      ],
     );
   }
 }

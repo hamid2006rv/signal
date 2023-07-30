@@ -13,7 +13,6 @@ class Monitor extends StatefulWidget {
 
 class _MonitorState extends State<Monitor> {
   late Oscilloscope scopeOne;
-  late Oscilloscope scopeTwo;
   late Signal_Generator _signal_generator1;
   late Signal_Generator _signal_generator2;
 
@@ -52,10 +51,9 @@ class _MonitorState extends State<Monitor> {
         max_exhale: 100,
         onSignalGenerated: signal2_recieves);
 
-    matcher = Signal_Matching(signal1:SignalDataSet1 , signal2:SignalDataSet2 );
+    matcher = Signal_Matching(signal1: SignalDataSet1, signal2: SignalDataSet2);
     _signal_generator1.run();
     _signal_generator2.run();
-
   }
 
   @override
@@ -67,30 +65,24 @@ class _MonitorState extends State<Monitor> {
       margin: EdgeInsets.all(20.0),
       strokeWidth: 3.0,
       backgroundColor: Colors.black,
-      traceColor: Colors.green,
+      traceColor1: Colors.green,
+      traceColor2: Colors.yellow,
       yAxisMax: 150,
       yAxisMin: -150,
-      dataSet: SignalDataSet1,
-    );
-
-    // Create A Scope Display for Cosine
-    scopeTwo = Oscilloscope(
-      showYAxis: true,
-      margin: EdgeInsets.all(20.0),
-      strokeWidth: 3.0,
-      backgroundColor: Colors.black,
-      traceColor: Colors.yellow,
-      yAxisMax: 150.0,
-      yAxisMin: -150.0,
-      dataSet: SignalDataSet2,
+      dataSet1: SignalDataSet1,
+      dataSet2: SignalDataSet2,
     );
 
     return Scaffold(
       appBar: AppBar(
         title: Text('test'),
-        actions: [IconButton(onPressed: (){
-          print(matcher.absolute_error(-1));
-        }, icon: Icon(Icons.question_mark))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                print(matcher.absolute_error(-1));
+              },
+              icon: Icon(Icons.question_mark))
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -99,9 +91,11 @@ class _MonitorState extends State<Monitor> {
             child: scopeOne,
           ),
           Expanded(
-            flex: 1,
-            child: scopeTwo,
-          )
+              flex: 1,
+              child: Container(
+                color: Colors.black,
+                height: MediaQuery.of(context).size.height / 2,
+              ))
         ],
       ),
     );
